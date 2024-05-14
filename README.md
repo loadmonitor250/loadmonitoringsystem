@@ -7,4 +7,4 @@ This repository works for both desktop and mobile controller of Arduino via Thin
 
 For desktop simply use index.html file
 
-For mobile build the file using Android Studio and load index>html as web app>
+For mobile build the file using Android Studio and load index>html as web app
