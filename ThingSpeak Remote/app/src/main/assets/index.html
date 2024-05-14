@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Monitor</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto">
+
+    <style>
+        body {
+            font-family: Roboto !important;
+            background-color: rgb(66,133,245) !important;
+            margin-bottom: 100px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 999;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar mb-3 sticky-top px-3">
+    <div></div>
+    <div>
+        <a href="index.html" class="btn btn-warning"> <i class="fa-solid fa-power-off me-2"></i>Reboot</a>
+    </div>
+</nav>
+
+<div class="container-fluid">
+
+
+
+    <div class="text-white text-center mb-3">
+        Energy Consumption Monitoring System by <span class="text-info">Thingspeak</span>
+    </div>
+
+    <div class="">
+        <a href="#consumptionResults" class="btn btn-light mb-2" id="btnConsumption">
+            <i class="fa-solid fa-bolt-lightning me-1 text-warning"></i>
+            Energy
+        </a>
+        <a href="#numericResults" class="btn btn-light mb-2" id="btnNumeric">
+            <i class="fa-solid fa-plug-circle-bolt me-1 text-warning"></i>
+            Power
+        </a>
+        <a href="#graphicalResults" class="btn btn-light mb-2" id="btnGraphical">
+            <i class="fa-solid fa-chart-line me-1 text-warning"></i>Graph
+        </a>
+    </div>
+
+    <!-- consumptionResults -->
+    <div class="bg-white p-2 rounded my-3" id="consumptionResults">
+        <a href="#summaryEC" class="btn btn-primary mb-2" id="btnSummaryEC">Summary</a>
+        <a href="#totalLoadEC" class="btn btn-primary mb-2" id="btnTotalLoadEC">Total Load</a>
+        <a href="#load2EC" class="btn btn-primary mb-2" id="btnLoad2EC">Load 2</a>
+        <a href="#load3EC" class="btn btn-primary mb-2" id="btnLoad3EC">Load 3</a>
+
+        <div id="summaryEC">
+            <div class="mt-3">
+                <div class="text-center mb-3">Energy Consumption Summary</div>
+                <!-- <div class="mx-3">
+                    <small class="text-secondary">Some readings are not available until a load is turned off</small>
+                </div> -->
+                <div class="bg-white border rounded p-3 mb-3 mx-3">
+                    <span class="h5">Total Load: <span id="smTLC"></span> kWh</span>
+                </div>
+                <div class="bg-white border rounded p-3 mb-3 mx-3">
+                    <span class="h5">Load 2: <span id="smL2C"></span> kWh</span>
+                </div>
+                <div class="bg-white border rounded p-3 mb-3 mx-3">
+                    <span class="h5">Load 3: <span id="smL3C"></span> kWh</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="totalLoadEC" class="d-none">
+            <div class="my-3">
+                <div class="text-center">Total Load Energy Consumption</div>
+            </div>
+            <div id="fetchField1"></div>
+        </div>
+
+        <div id="load2EC" class="d-none">
+            <div class="my-3">
+                <div class="text-center">Load 2 Energy Consumption</div>
+            </div>
+            <div id="fetchField2"></div>
+        </div>
+
+        <div id="load3EC" class="d-none">
+            <div class="my-3">
+                <div class="text-center">Load 3 Energy Consumption</div>
+            </div>
+            <div id="fetchField3"></div>
+        </div>
+
+    </div>
+    <!-- end consumptionResults -->
+
+    <!-- graphicalResults -->
+    <div class="bg-white p-2 rounded my-3 d-none" id="graphicalResults">
+        <div class="ratio ratio-4x3 mb-3 border">
+            <iframe class="" src="https://thingspeak.com/channels/2502900/charts/1?bgcolor=%23ffffff&color=%234285f4&dynamic=true&results=60&title=Total+Load&type=line"></iframe>
+        </div>
+        <div class="ratio ratio-4x3 mb-3 border">
+            <iframe class="" src="https://thingspeak.com/channels/2502900/charts/2?bgcolor=%23ffffff&color=%2334a853&dynamic=true&results=60&title=Load+2&type=line"></iframe>
+        </div>
+        <div class="ratio ratio-4x3 mb-3 border">
+            <iframe class="" src="https://thingspeak.com/channels/2502900/charts/3?bgcolor=%23ffffff&color=%23ea4335&dynamic=true&results=60&title=Load+3&type=line"></iframe>
+        </div>
+    </div>
+    <!-- end graphicalResults -->
+
+    <!-- numericResults -->
+    <div class="bg-white p-2 rounded my-3 d-none" id="numericResults">
+        <div class="text-center">Total Load</div>
+        <div class="ratio ratio-4x3 mb-3 border">
+            <iframe class="" src="https://thingspeak.com/channels/2502900/widgets/836062"></iframe>
+        </div>
+        <div class="text-center">Load 2</div>
+        <div class="ratio ratio-4x3 mb-3 border">
+            <iframe class="" src="https://thingspeak.com/channels/2502900/widgets/836132"></iframe>
+        </div>
+        <div class="text-center">Load 3</div>
+        <div class="ratio ratio-4x3 mb-3 border">
+            <iframe class="" src="https://thingspeak.com/channels/2502900/widgets/836137"></iframe>
+        </div>
+    </div>
+    <!-- end numericResults -->
+
+</div>
+
+<footer class="footer pt-2 px-2 pb-3 border border-top" id="relaySwitch" style="background-color: rgb(235,235,239);">
+    <p class="text-secondary text-center">Load Switch</p>
+    <div class="row">
+        <div class="col-6">
+            <button class="btn btn-primary center" id="load2SwitchOn">Load 2: On</button>
+            <button class="btn btn-secondary center d-none" id="load2SwitchOff">Load 2: Off</button>
+        </div>
+        <div class="col-6">
+            <button class="btn btn-primary center" id="load3SwitchOn">Load 3: On</button>
+            <button class="btn btn-secondary center d-none" id="load3SwitchOff">Load 3: Off</button>
+        </div>
+    </div>
+</footer>
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/5d8b225433.js" crossorigin="anonymous"></script>
+
+<script>
+
+    $(document).ready(function() {
+
+        fetchField1();
+        fetchField2();
+        fetchField3();
+
+        let load2On = -2;
+        let load2Off = -2.5;
+        let load3On = -3;
+        let load3Off = -3.5;
+        let toThingSpeakInterval = 3000;
+
+        fetchField4(function(value) {
+            if (value == -2) {
+                $('#load2SwitchOn').addClass('d-none');
+                $('#load2SwitchOff').removeClass('d-none');
+            }
+        });
+        fetchField5(function(value) {
+            if (value == -3) {
+                $('#load3SwitchOn').addClass('d-none');
+                $('#load3SwitchOff').removeClass('d-none');
+            }
+        });
+
+        $('#btnNumeric').on('click', function() {
+            $('#graphicalResults').addClass('d-none');
+            $('#numericResults').removeClass('d-none');
+            $('#consumptionResults').addClass('d-none');
+        });
+
+        $('#btnGraphical').on('click', function() {
+            $('#numericResults').addClass('d-none');
+            $('#graphicalResults').removeClass('d-none');
+            $('#consumptionResults').addClass('d-none');
+        });
+
+        $('#btnConsumption').on('click', function() {
+            $('#numericResults').addClass('d-none');
+            $('#graphicalResults').addClass('d-none');
+            $('#consumptionResults').removeClass('d-none');
+        });
+
+        //////////////////////////////////
+        $('#btnSummaryEC').on('click', function() {
+            $('#summaryEC').removeClass('d-none');
+            $('#totalLoadEC').addClass('d-none');
+            $('#load2EC').addClass('d-none');
+            $('#load3EC').addClass('d-none');
+        });
+
+        $('#btnTotalLoadEC').on('click', function() {
+            $('#summaryEC').addClass('d-none');
+            $('#totalLoadEC').removeClass('d-none');
+            $('#load2EC').addClass('d-none');
+            $('#load3EC').addClass('d-none');
+        });
+
+        $('#btnLoad2EC').on('click', function() {
+            $('#summaryEC').addClass('d-none');
+            $('#totalLoadEC').addClass('d-none');
+            $('#load2EC').removeClass('d-none');
+            $('#load3EC').addClass('d-none');
+        });
+
+        $('#btnLoad3EC').on('click', function() {
+            $('#summaryEC').addClass('d-none');
+            $('#totalLoadEC').addClass('d-none');
+            $('#load2EC').addClass('d-none');
+            $('#load3EC').removeClass('d-none');
+        });
+
+        /////////////////////////////////
+        $('#load2SwitchOn').on('click', function() {
+            $('#load2SwitchOn').addClass('d-none');
+            $('#load2SwitchOff').removeClass('d-none');
+            sendDataToThingSpeakRepeatedly(4, load2On, toThingSpeakInterval);
+
+        });
+
+        $('#load2SwitchOff').on('click', function() {
+
+            $('#load2SwitchOff').addClass('d-none');
+            $('#load2SwitchOn').removeClass('d-none');
+            sendDataToThingSpeakRepeatedly(4, load2Off, toThingSpeakInterval);
+
+        });
+
+        $('#load3SwitchOn').on('click', function() {
+            $('#load3SwitchOn').addClass('d-none');
+            $('#load3SwitchOff').removeClass('d-none');
+            sendDataToThingSpeakRepeatedly(5, load3On, toThingSpeakInterval);
+
+        });
+
+        $('#load3SwitchOff').on('click', function() {
+            $('#load3SwitchOff').addClass('d-none');
+            $('#load3SwitchOn').removeClass('d-none');
+            sendDataToThingSpeakRepeatedly(5, load3Off, toThingSpeakInterval);
+
+        });
+
+
+    });
+
+    function sendDataToThingSpeak(field,valueToSend) {
+       var url = "https://api.thingspeak.com/update?api_key=MS2AGKAWNIGO9M11&field" + field + "=" + valueToSend + "";
+       $.ajax({
+           url: url,
+           type: 'POST',
+           success: function(response) {
+               console.log("Data sent successfully to ThingSpeak for Field " + field);
+           },
+           error: function(xhr, status, error) {
+               console.error("Error sending data to ThingSpeak:", error);
+           }
+       });
+    }
+
+    function sendDataToThingSpeakRepeatedly(field, valueToSend, iterations) {
+       let i = 0;
+       let interval = setInterval(function() {
+           sendDataToThingSpeak(field, valueToSend);
+           i++;
+           if (i === iterations) {
+               clearInterval(interval);
+           }
+       }, 0);
+    }
+
+    function fetchField1() {
+        const numResults = 172800;
+        $.getJSON(`https://api.thingspeak.com/channels/2502900/fields/1.json?results=${numResults}`, function(data) {
+            const feeds = data.feeds;
+            const container = $('#fetchField1');
+            const summaryTotalLoadContainer = $('#smTLC');
+            container.empty();
+            let validFeeds = [];
+            let totalValue = 0;
+
+            feeds.forEach(feed => {
+                const value = parseFloat(feed.field1);
+                if (!isNaN(value) && value !== 0) {
+                    validFeeds.push(feed);
+                    totalValue += value;
+                }
+            });
+
+            if (validFeeds.length > 0) {
+                let totalTime = 0;
+
+                const threshold = 3600;
+                for (let i = 1; i < validFeeds.length; i++) {
+                    let prevTime = new Date(validFeeds[i - 1].created_at);
+                    let currentTime = new Date(validFeeds[i].created_at);
+                    let timeDifference = (currentTime - prevTime) / 1000;
+                    if (timeDifference <= threshold) {
+                        totalTime += timeDifference;
+                    }
+                }
+
+                let averageValue = totalValue / validFeeds.length;
+
+
+
+                container.append(
+                    `<div class="mx-3">Run time: ${(totalTime / 3600).toFixed(3)} hours </div>`
+                );
+                container.append(
+                    `<div class="mx-3">Average Power: ${averageValue.toFixed(3)} Watts</div>`
+                );
+                container.append(
+                    `<div class="my-3 border rounded p-3">
+                        <small class="text-secondary">Energy Consumption</small>
+                        <div class="">
+                            (${averageValue.toFixed(3)} x ${(totalTime / 3600).toFixed(3)}) / 1000
+                            = ${((averageValue.toFixed(3) * (totalTime / 3600).toFixed(3)) / 1000).toFixed(3)}
+                            kWh
+                        </div>
+                    </div>`
+                );
+
+                summaryTotalLoadContainer.append(`${((averageValue.toFixed(3) * (totalTime / 3600).toFixed(3)) / 1000).toFixed(3)}`);
+
+                container.append(`
+                    <div>
+                        <div class="mt-5 mb-3 text-center">ThingSpeak History (Total Load)</div>
+                        <table class="table border">
+                            <thead>
+                                <tr>
+                                    <td class="border-end">Timestamp</td>
+                                    <td>Value</td>
+                                </tr>
+                            </thead>
+                                <tbody>
+                ${validFeeds.map((feed, index) => {
+                    const utcTimestamp = feed.created_at;
+                    const localTimestamp = new Date(utcTimestamp);
+                    const options = {
+                        timeZone: 'Asia/Manila',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    };
+                    const formattedTimestamp = localTimestamp.toLocaleString('en-US', options);
+                    const value = parseFloat(feed.field1);
+
+                    return `
+                        <tr>
+                            <td class="border-end">${formattedTimestamp}</td>
+                            <td>${value.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `);
+
+            } else {
+                container.append('<div>No valid data found</div>');
+            }
+        });
+    }
+
+    function fetchField2() {
+        const numResults = 172800;
+        $.getJSON(`https://api.thingspeak.com/channels/2502900/fields/2.json?results=${numResults}`, function(data) {
+            const feeds = data.feeds;
+            const container = $('#fetchField2');
+            const summaryLoad2Container = $('#smL2C');
+            container.empty();
+            let validFeeds = [];
+            let totalValue = 0;
+
+            feeds.forEach(feed => {
+                const value = parseFloat(feed.field2);
+                if (!isNaN(value) && value !== 0) {
+                    validFeeds.push(feed);
+                    totalValue += value;
+                }
+            });
+
+            if (validFeeds.length > 0) {
+                let totalTime = 0;
+
+                const threshold = 3600;
+                for (let i = 1; i < validFeeds.length; i++) {
+                    let prevTime = new Date(validFeeds[i - 1].created_at);
+                    let currentTime = new Date(validFeeds[i].created_at);
+                    let timeDifference = (currentTime - prevTime) / 1000;
+                    if (timeDifference <= threshold) {
+                        totalTime += timeDifference;
+                    }
+                }
+
+                let averageValue = totalValue / validFeeds.length;
+
+                container.append(
+                    `<div class="mx-3">Run time: ${(totalTime / 3600).toFixed(3)} hours </div>`
+                );
+                container.append(
+                    `<div class="mx-3">Average Power: ${averageValue.toFixed(3)} Watts</div>`
+                );
+                container.append(
+                    `<div class="my-3 border rounded p-3">
+                        <small class="text-secondary">Energy Consumption</small>
+                        <div class="">
+                            (${averageValue.toFixed(3)} x ${(totalTime / 3600).toFixed(3)}) / 1000
+                            = ${((averageValue.toFixed(3) * (totalTime / 3600).toFixed(3)) / 1000).toFixed(3)}
+                            kWh
+                        </div>
+                    </div>`
+                );
+
+                summaryLoad2Container.append(`${((averageValue.toFixed(3) * (totalTime / 3600).toFixed(3)) / 1000).toFixed(3)}`);
+
+                container.append(`
+                    <div>
+                        <div class="mt-5 mb-3 text-center">ThingSpeak History (Load 2)</div>
+                        <table class="table border">
+                            <thead>
+                                <tr>
+                                    <td class="border-end">Timestamp</td>
+                                    <td>Value</td>
+                                </tr>
+                            </thead>
+                                <tbody>
+                ${validFeeds.map((feed, index) => {
+                    const utcTimestamp = feed.created_at;
+                    const localTimestamp = new Date(utcTimestamp);
+                    const options = {
+                        timeZone: 'Asia/Manila',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    };
+                    const formattedTimestamp = localTimestamp.toLocaleString('en-US', options);
+                    const value = parseFloat(feed.field2);
+
+                    return `
+                        <tr>
+                            <td class="border-end">${formattedTimestamp}</td>
+                            <td>${value.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `);
+
+            } else {
+                container.append('<div>No valid data found</div>');
+            }
+        });
+    }
+
+    function fetchField3() {
+        const numResults = 172800;
+        $.getJSON(`https://api.thingspeak.com/channels/2502900/fields/3.json?results=${numResults}`, function(data) {
+            const feeds = data.feeds;
+            const container = $('#fetchField3');
+            const summaryLoad3Container = $('#smL3C');
+            container.empty();
+            let validFeeds = [];
+            let totalValue = 0;
+
+            feeds.forEach(feed => {
+                const value = parseFloat(feed.field3);
+                if (!isNaN(value) && value !== 0) {
+                    validFeeds.push(feed);
+                    totalValue += value;
+                }
+            });
+
+            if (validFeeds.length > 0) {
+                let totalTime = 0;
+
+                const threshold = 3600;
+                for (let i = 1; i < validFeeds.length; i++) {
+                    let prevTime = new Date(validFeeds[i - 1].created_at);
+                    let currentTime = new Date(validFeeds[i].created_at);
+                    let timeDifference = (currentTime - prevTime) / 1000;
+                    if (timeDifference <= threshold) {
+                        totalTime += timeDifference;
+                    }
+                }
+
+                let averageValue = totalValue / validFeeds.length;
+
+                container.append(
+                    `<div class="mx-3">Run time: ${(totalTime / 3600).toFixed(3)} hours </div>`
+                );
+                container.append(
+                    `<div class="mx-3">Average Power: ${averageValue.toFixed(3)} Watts</div>`
+                );
+                container.append(
+                    `<div class="my-3 border rounded p-3">
+                        <small class="text-secondary">Energy Consumption</small>
+                        <div class="">
+                            (${averageValue.toFixed(3)} x ${(totalTime / 3600).toFixed(3)}) / 1000
+                            = ${((averageValue.toFixed(3) * (totalTime / 3600).toFixed(3)) / 1000).toFixed(3)}
+                            kWh
+                        </div>
+                    </div>`
+                );
+
+                summaryLoad3Container.append(`${((averageValue.toFixed(3) * (totalTime / 3600).toFixed(3)) / 1000).toFixed(3)}`);
+
+                container.append(`
+                    <div>
+                        <div class="mt-5 mb-3 text-center">ThingSpeak History (Load 3)</div>
+                        <table class="table border">
+                            <thead>
+                                <tr>
+                                    <td class="border-end">Timestamp</td>
+                                    <td>Value</td>
+                                </tr>
+                            </thead>
+                                <tbody>
+                ${validFeeds.map((feed, index) => {
+                    const utcTimestamp = feed.created_at;
+                    const localTimestamp = new Date(utcTimestamp);
+                    const options = {
+                        timeZone: 'Asia/Manila',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    };
+                    const formattedTimestamp = localTimestamp.toLocaleString('en-US', options);
+                    const value = parseFloat(feed.field3);
+
+                    return `
+                        <tr>
+                            <td class="border-end">${formattedTimestamp}</td>
+                            <td>${value.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `);
+
+            } else {
+                container.append('<div>No valid data found</div>');
+            }
+        });
+    }
+
+    function fetchField4(callback) {
+        const numResults = 100;
+        $.getJSON(`https://api.thingspeak.com/channels/2502900/fields/4.json?results=${numResults}`, function(data) {
+            const feeds = data.feeds;
+            let validEntryFound = false;
+
+            for (let i = feeds.length - 1; i >= 0; i--) {
+                const feed = feeds[i];
+                const field4value = feed.field4;
+
+                if (field4value !== null && field4value !== '0' && field4value !== 0) {
+                    validEntryFound = true;
+                    callback(field4value);
+                    break;
+                }
+            }
+
+            if (!validEntryFound) {
+                console.log('No valid data found');
+                callback(null);
+            }
+        });
+    }
+
+    function fetchField5(callback) {
+        const numResults = 100;
+        $.getJSON(`https://api.thingspeak.com/channels/2502900/fields/5.json?results=${numResults}`, function(data) {
+            const feeds = data.feeds;
+            let validEntryFound = false;
+
+            for (let i = feeds.length - 1; i >= 0; i--) {
+                const feed = feeds[i];
+                const field5value = feed.field5;
+
+                if (field5value !== null && field5value !== '0' && field5value !== 0) {
+                    validEntryFound = true;
+                    callback(field5value);
+                    break;
+                }
+            }
+
+            if (!validEntryFound) {
+                console.log('No valid data found');
+                callback(null);
+            }
+        });
+    }
+
+
+
+</script>
+</body>
+</html>
